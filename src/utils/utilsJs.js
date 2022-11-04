@@ -19,19 +19,23 @@ function tokenGenerate() {
   return result;
 }
 
-// async function writeNewMissionsData(newMission) {
-//   try {
-//     const oldMissions = await readMissionsData();
-//     const newMIssionWithID = { id: Date.now(), ...newMission };
-//     const allMissions = JSON.stringify([...oldMissions, newMIssionWithID]);
-//     await fs.writeFile(path.resolve(__dirname, PATH_DATA), allMissions);
-//     return newMIssionWithID;
-//   } catch (error) {
-//     console.error(`Erro na leitura ${error}`);
-//   }
-// }
+async function writeTalkerData(newTalker) {
+  try {
+    const oldTalkers = await readTalkerData();
+    const newTalkerID = {
+      id: oldTalkers.length + 1,
+      ...newTalker,
+    };
+    const addNewTalker = JSON.stringify([...oldTalkers, newTalkerID]);
+    await fs.writeFile(path.resolve(__dirname, PATH_DATA), addNewTalker);
+    return newTalkerID;
+  } catch (error) {
+    console.error(`Erro na leitura ${error}`);
+  }
+}
 
 module.exports = {
   readTalkerData,
   tokenGenerate,
+  writeTalkerData,
 };
