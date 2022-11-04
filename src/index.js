@@ -18,6 +18,38 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
+// ------------------------MIDLEWEARS--------------------------------------
+const validationEmailProps = (req, res, next) => {
+  const requireEmail = ['email'];
+  if (requireEmail.every((prop) => prop in req.body)) {
+    const emailRegex = /\S+@\S+\.\S+/;
+    const { email } = req.body;
+    if (emailRegex.test(email)) {
+      next();
+    } else {
+      res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+    }
+  } else {
+    res.status(400).send({ message: 'O campo "email" é obrigatório' });
+  }
+};
+
+const validationPasswordProps = (req, res, next) => {
+  const keys = Object.keys(req.body);
+  // const requirePassword = ['password'];
+  if (keys.includes('password')) {
+    const { password } = req.body;
+    if (password.length < 6) {
+      res.status(400).send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+    } else {
+      next();
+    }
+  } else {
+    res.status(400).send({ message: 'O campo "password" é obrigatório' });
+  }
+};
+
+// ------------------------END POINTS--------------------------------------
 app.get('/talker', async (_req, res) => {
   const talker = await readTalkerData();
   return res.status(200).json(talker);
@@ -31,7 +63,7 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
-app.post('/login', async (_req, res) => {
+app.post('/login', validationEmailProps, validationPasswordProps, async (_req, res) => {
   const token = tokenGenerate();
   res.status(200).json({ token: `${token}` });
 });

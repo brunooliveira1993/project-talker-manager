@@ -3,9 +3,10 @@
 
 // console.log(SHA256("asdfadsfasd"));
 
-function teste(n1, n2) {
-  const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
-  return random(n1, n2);
+function teste() {
+const email = 'iomji@lkj.com';
+const emailRegex = /\S+@\S+\.\S+/;
+console.log(emailRegex.test(email));
 }
 
-teste(1000000000000000, 9999999999999999);
+teste();
