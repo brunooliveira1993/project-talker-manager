@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const { readTalkerData } = require('./utils/utilsJs');
 
 const app = express();
+app.use(express.json());
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
@@ -20,4 +21,12 @@ app.listen(PORT, () => {
 app.get('/talker', async (_req, res) => {
   const talker = await readTalkerData();
   return res.status(200).json(talker);
+});
+
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const talker = await readTalkerData();
+  const talkerId = talker.filter((element) => element.id === Number(id));
+  if (talkerId.length !== 0) return res.status(200).json(talkerId[0]);
+  return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
