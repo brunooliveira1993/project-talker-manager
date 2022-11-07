@@ -126,6 +126,14 @@ return res.status(401).send({ message: 'Token não encontrado' });
 // ------------------------------------------------------------------------
 
 // ------------------------END POINTS--------------------------------------
+
+app.get('/talker/search', validationToken, async (req, res) => {
+  const result = req.query;
+  const talker = await readTalkerData();
+  const talkerSearch = talker.filter((talkerName) => talkerName.name.includes(result.q));
+  return res.status(200).json(talkerSearch);
+});
+
 app.get('/talker', async (_req, res) => {
   const talker = await readTalkerData();
   return res.status(200).json(talker);
@@ -164,4 +172,3 @@ app.delete('/talker/:id', validationToken, async (req, res) => {
   await deleteTalkerData(Number(id));
   return res.status(204).end();
 });
-// req.header('authorization');
