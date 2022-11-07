@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readTalkerData, tokenGenerate, writeTalkerData } = require('./utils/utilsJs');
+const { readTalkerData, tokenGenerate, writeTalkerData,
+  updateTalkerData, deleteTalkerData } = require('./utils/utilsJs');
 
 const app = express();
 app.use(express.json());
@@ -150,4 +151,17 @@ validationWatchedKeys, validationRateKeys, async (req, res) => {
   return res.status(201).json(addTalker);
 });
 
+app.put('/talker/:id', validationToken, validationName, validationAge, validationTalk,
+validationWatchedKeys, validationRateKeys, async (req, res) => {
+  const { id } = req.params;
+  const updateTalker = req.body;
+  const updateTalkers = await updateTalkerData(Number(id), updateTalker);
+  return res.status(200).json(updateTalkers);
+});
+
+app.delete('/talker/:id', validationToken, async (req, res) => {
+  const { id } = req.params;
+  await deleteTalkerData(Number(id));
+  return res.status(204).end();
+});
 // req.header('authorization');
